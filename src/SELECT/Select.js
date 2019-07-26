@@ -74,7 +74,6 @@ export default class Select extends Component {
     listenInside: false,
     itemHover: true,
     itemSelected: true,
-    type: "input",
     placeholder: true,
     logo: false,
     multiSelect: false,
@@ -102,7 +101,6 @@ export default class Select extends Component {
     this.state = {
       dropdownVisible: false,
       itemHover: 0,
-      inputClick: false,
       placeholder: "Select...",
       valueInput: "",
       mounted: false
@@ -255,7 +253,6 @@ export default class Select extends Component {
   };
 
   itemClick = element => {
-    console.log(element);
     if (this.props.multiSelect) {
       if (typeof this.props.value !== "object") {
         let value = [element];
@@ -269,6 +266,7 @@ export default class Select extends Component {
     } else {
       this.props.itemClick(element);
     }
+    this.setState({ valueInput: "" });
   };
 
   multipleStyle = () => {
@@ -293,14 +291,16 @@ export default class Select extends Component {
   inputStyle = () => {
     let inputStyle = { ...this.props.style.input };
     let element = document.getElementById(`${this.props.idItem}_sL`);
-
     if (element) {
       let elementBounding = element.getBoundingClientRect();
+      console.log(elementBounding);
       if (!this.props.readOnly) {
+        console.log(elementBounding.width);
         let inputWidth = elementBounding.width + 15;
         inputStyle.width = inputWidth;
       }
     }
+
     return inputStyle;
   };
 
@@ -329,6 +329,14 @@ export default class Select extends Component {
     }
 
     return newArray;
+  };
+
+  monoAnswer = style => {
+    let styleValue = { ...style };
+
+    styleValue.position = "absolute";
+
+    return styleValue;
   };
 
   render() {
@@ -370,7 +378,7 @@ export default class Select extends Component {
                   ? this.multiWrap(this.props.style.value)
                   : this.state.valueInput
                   ? { display: "none" }
-                  : this.multiWrap(this.props.style.value)
+                  : this.monoAnswer(this.props.style.value)
               }
             >
               {this.props.multiSelect
@@ -383,29 +391,29 @@ export default class Select extends Component {
                     );
                   })
                 : this.props.value}
-
-              {/* INPUT */}
-              {this.props.readOnly ? (
-                <input
-                  readOnly
-                  ref={ref => (this.input = ref)}
-                  value={""}
-                  style={this.inputStyle()}
-                  onKeyDown={this.onKeyDownInput}
-                />
-              ) : (
-                <input
-                  style={this.inputStyle()}
-                  ref={ref => (this.input = ref)}
-                  value={this.state.valueInput}
-                  onChange={e => this.handleChangeInput(e)}
-                  onKeyDown={this.onKeyDownInput}
-                  onBlur={() => {
-                    this.setState({ valueInput: "" });
-                  }}
-                />
-              )}
             </div>
+            {/* INPUT */}
+
+            {this.props.readOnly ? (
+              <input
+                readOnly
+                ref={ref => (this.input = ref)}
+                value={""}
+                style={this.inputStyle()}
+                onKeyDown={this.onKeyDownInput}
+              />
+            ) : (
+              <input
+                style={this.inputStyle()}
+                ref={ref => (this.input = ref)}
+                value={this.state.valueInput}
+                onChange={e => this.handleChangeInput(e)}
+                onKeyDown={this.onKeyDownInput}
+                // onBlur={() => {
+                //   this.setState({ valueInput: "" });
+                // }}
+              />
+            )}
 
             {/* PLACEHOLDER */}
             {this.props.placeholder &&
@@ -465,3 +473,11 @@ export default class Select extends Component {
     );
   }
 }
+
+// style={
+//   this.props.multiSelect
+//     ? this.multiWrap(this.props.style.value)
+//     : this.state.valueInput
+//     ? { display: "none" }
+//     : this.props.style.value
+// }

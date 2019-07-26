@@ -13,6 +13,7 @@ class App extends React.Component {
 
   // 1er SELECT avec ReadOnly
   setSelectValue = element => this.setState({ selectValue: element });
+  handleChangeSelect1 = event => this.setState({ selectValue: event });
 
   // 2ème SELECT avec possibilité d'écrire
   setSelectValue2 = element => this.setState({ selectValue2: element });
@@ -36,10 +37,11 @@ class App extends React.Component {
             <Select
               array={array}
               value={this.state.selectValue}
+              onChange={this.handleChangeSelect1}
               itemClick={this.setSelectValue}
               style={selectStyle}
               listenInside={true}
-              readOnly={true}
+              // readOnly={true}
               idItem={"SelectRewritable"}
               logo={selectLogo}
             />
@@ -55,6 +57,8 @@ class App extends React.Component {
               listenInside={true}
               idItem={"SelectReadOnly"}
               logo={selectLogo}
+              multiSelect={true}
+              multiWrap={true}
             />
           </div>
         </div>

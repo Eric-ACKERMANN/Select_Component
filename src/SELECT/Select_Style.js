@@ -23,7 +23,8 @@ export const selectStyle = {
     fontWeight: 500,
     outline: "none",
     border: "none",
-    width: 0
+    width: 0,
+    backgroundColor: "white"
   },
   value: {
     display: "flex",
