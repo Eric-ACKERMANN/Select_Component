@@ -4,7 +4,7 @@ export const selectStyle = {
   container: {
     position: "relative",
     backgroundColor: "none",
-    width: "300px"
+    width: "315px"
   },
   input_box: {
     display: "flex",
@@ -32,6 +32,24 @@ export const selectStyle = {
     top: 0,
     fontSize: 14,
     fontWeight: 500
+  },
+  multipleValue: {
+    padding: "5px",
+    display: "flex",
+    backgroundColor: "#DDD",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  multipleValueDelete: {
+    fontSize: "10px",
+    padding: "5px",
+    display: "flex",
+    backgroundColor: "#DDD",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  valueDelete: {
+    backgroundColor: "red"
   },
   placeholder: {
     color: "#808080",
@@ -68,16 +86,17 @@ export const selectStyle = {
     color: "black",
     backgroundColor: "#DDD"
   },
-  multipleItem: {
-    padding: "5px",
-    backgroundColor: "#DDD",
-    borderRadius: "3px",
-    margin: "5px 5px"
-  },
+
   logo: {
     padding: "0px 0px 0px 5px",
     margin: "0px 0px 0px 0px",
     borderLeft: "solid 1px black",
+    marginLeft: "auto",
+    height: "100%"
+  },
+  clear: {
+    padding: "0px 0px 0px 5px",
+    margin: "0px 5px 0px 0px",
     marginLeft: "auto",
     height: "100%"
   }
@@ -85,13 +104,11 @@ export const selectStyle = {
 
 export const selectLogo = {
   name: "searchLogo",
-  body: (
-    <i
-      onMouseEnter={e => {
-        console.log("hello");
-      }}
-      className="fas fa-search"
-    />
-  ),
+  body: <i className="fas fa-search" />,
   position: 1
+};
+
+export const clearLogo = {
+  name: "clearLogo",
+  body: <i class="fas fa-times" />
 };

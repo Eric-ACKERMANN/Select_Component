@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import ClickListener from "./ClickListener";
+import { clearLogo } from "./Select_Style";
 
 const setView = function(item, container, direction) {
   let itemBounding = item.getBoundingClientRect();
@@ -77,7 +78,8 @@ export default class Select extends Component {
     placeholder: true,
     logo: false,
     multiSelect: false,
-    multiWrap: false
+    multiWrap: false,
+    clear: false
   };
 
   static propsType = {
@@ -93,7 +95,10 @@ export default class Select extends Component {
     idItem: PropTypes.string,
     placeholder: PropTypes.bool,
     logo: PropTypes.object,
-    multiSelect: PropTypes.bool
+    multiSelect: PropTypes.bool,
+    multiWrap: PropTypes.bool,
+    clear: PropTypes.bool,
+    multiDelete: PropTypes.bool
   };
 
   constructor(props) {
@@ -252,7 +257,12 @@ export default class Select extends Component {
     }
   };
 
-  itemClick = element => {
+  itemClick = (element, index) => {
+    if (index && index === this.props.array.length) {
+      console.log(element);
+      element = element.substr(8, element.length - 1 - 8);
+      console.log(element);
+    }
     if (this.props.multiSelect) {
       if (typeof this.props.value !== "object") {
         let value = [element];
@@ -271,17 +281,34 @@ export default class Select extends Component {
 
   multipleStyle = () => {
     if (this.props.multiSelect) {
-      let styleItem = { ...this.props.style.item };
-      let styleMultipleItem = { ...this.props.style.multipleItem };
+      let styleValue = { ...this.props.style.value };
+      let styleMultipleValue = { ...this.props.style.multipleValue };
 
       // On récupère la liste des keys de Selected
-      const keysItemSelected = Object.keys(styleMultipleItem);
-      keysItemSelected.forEach(key => {
-        styleItem[key] = styleMultipleItem[key];
+      const keysValueSelected = Object.keys(styleMultipleValue);
+      keysValueSelected.forEach(key => {
+        styleValue[key] = styleMultipleValue[key];
       });
-      return styleItem;
+      return styleValue;
     }
-    return this.props.style.item;
+    return this.props.style.value;
+  };
+
+  multipleStyleDelete = () => {
+    if (this.props.multiSelect) {
+      let styleValue = { ...this.props.style.value };
+      let styleMultipleValueDelete = {
+        ...this.props.style.multipleValueDelete
+      };
+
+      // On récupère la liste des keys de Selected
+      const keysValueSelected = Object.keys(styleMultipleValueDelete);
+      keysValueSelected.forEach(key => {
+        styleValue[key] = styleMultipleValueDelete[key];
+      });
+      return styleValue;
+    }
+    return this.props.style.value;
   };
 
   componentDidMount = () => {
@@ -293,9 +320,7 @@ export default class Select extends Component {
     let element = document.getElementById(`${this.props.idItem}_sL`);
     if (element) {
       let elementBounding = element.getBoundingClientRect();
-      console.log(elementBounding);
       if (!this.props.readOnly) {
-        console.log(elementBounding.width);
         let inputWidth = elementBounding.width + 15;
         inputStyle.width = inputWidth;
       }
@@ -337,6 +362,13 @@ export default class Select extends Component {
     styleValue.position = "absolute";
 
     return styleValue;
+  };
+
+  multiValueDelete = element => {
+    let value = [...this.props.value];
+    let position = value.indexOf(element);
+    value.splice(position, 1);
+    this.props.itemClick(value);
   };
 
   render() {
@@ -385,8 +417,32 @@ export default class Select extends Component {
                 ? this.props.value &&
                   this.props.value.map(e => {
                     return (
-                      <div style={this.multipleStyle(this.props.style.value)}>
-                        {e}
+                      <div
+                        style={{
+                          display: "flex",
+                          margin: "5px",
+                          borderRadius: "3px 3px 3px 3px",
+                          overflow: "hidden"
+                        }}
+                      >
+                        {/* VALUE - VALUE */}
+                        <div style={this.multipleStyle(this.props.style.value)}>
+                          {e}
+                        </div>
+
+                        {/* VALUE - Boutton delete */}
+                        {this.props.multiDelete && (
+                          <div
+                            onClick={() => {
+                              this.multiValueDelete(e);
+                            }}
+                            style={this.multipleStyleDelete(
+                              this.props.style.value
+                            )}
+                          >
+                            <i class="fas fa-times" />
+                          </div>
+                        )}
                       </div>
                     );
                   })
@@ -424,6 +480,18 @@ export default class Select extends Component {
                 </div>
               )}
           </div>
+          {/* DIV DU CLEARABLE */}
+          {this.props.clearable && (
+            <div
+              onClick={() => {
+                this.props.itemClick("");
+              }}
+              style={this.props.style.clear}
+            >
+              {clearLogo.body}
+            </div>
+          )}
+
           {/* DIV DU LOGO */}
           {this.props.logo && this.props.logo.position === 1 && (
             <div style={this.props.style.logo}>{this.props.logo.body}</div>
@@ -453,7 +521,7 @@ export default class Select extends Component {
                           ? this.hover(this.props.style.item)
                           : this.props.style.item
                       }
-                      onClick={() => this.itemClick(element)}
+                      onClick={() => this.itemClick(element, index)}
                       onMouseEnter={() => {
                         this.setState({ itemHover: index });
                       }}
