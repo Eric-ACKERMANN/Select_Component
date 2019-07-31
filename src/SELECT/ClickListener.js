@@ -16,12 +16,15 @@ export default class NativeClickListener extends React.Component {
 
   globalClickHandler = nativeEvent => {
     const { onClick, listenInside } = this.props;
+
     if (
       this._container &&
       this._container.contains(nativeEvent.target) &&
       !listenInside
-    )
+    ) {
       return;
+    }
+
     onClick(nativeEvent);
   };
 

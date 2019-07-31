@@ -55,7 +55,6 @@ class App extends React.Component {
               onChange={this.handleChangeSelect}
               itemClick={this.setSelectValue2}
               style={selectStyle}
-              listenInside={true}
               idItem={"SelectReadOnly"}
               logo={selectLogo}
               multiSelect={true}

@@ -34,7 +34,7 @@ export const selectStyle = {
     fontWeight: 500
   },
   multipleValue: {
-    padding: "5px",
+    padding: "15px",
     display: "flex",
     backgroundColor: "#DDD",
     justifyContent: "center",
@@ -42,9 +42,9 @@ export const selectStyle = {
   },
   multipleValueDelete: {
     fontSize: "10px",
-    padding: "5px",
+    padding: "15px",
     display: "flex",
-    backgroundColor: "#DDD",
+    backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -110,5 +110,5 @@ export const selectLogo = {
 
 export const clearLogo = {
   name: "clearLogo",
-  body: <i class="fas fa-times" />
+  body: <i className="fas fa-times" />
 };
