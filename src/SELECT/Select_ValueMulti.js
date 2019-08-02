@@ -48,7 +48,10 @@ export default function ValueMulti({ value, style, multiValueProps }) {
                 index
               )}
             >
-              <i id={`${idItem}multiDelete${index}`} className="fas fa-times" />
+              <i
+                id={`${idItem}multiDeleteLogo${index}`}
+                className="fas fa-times"
+              />
             </div>
           )}
         </div>

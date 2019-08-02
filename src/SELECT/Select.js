@@ -118,10 +118,6 @@ export default class Select extends Component {
     };
   }
 
-  onBlurInput = () => {
-    this.setState({ valueInput: "" });
-  };
-
   onKeyDownInput = e => {
     // BACKSPACE
     if (e.keyCode === 8) {
@@ -170,13 +166,15 @@ export default class Select extends Component {
       newPosition = setPosition(
         position,
         direction,
-        this.createAnswer(this.filterArray(this.props.array))
+        this.createAnswer(this.filterArray([...this.props.array]))
       );
 
       // Set the view to auto-scroll if element is out of viewport.
       let item = document.getElementById(
         `${this.props.idItem}_${
-          this.createAnswer(this.filterArray(this.props.array))[newPosition]
+          this.createAnswer(this.filterArray([...this.props.array]))[
+            newPosition
+          ]
         }_${newPosition}`
       );
 
@@ -190,11 +188,11 @@ export default class Select extends Component {
 
     // ENTER
     if (e.keyCode === 13) {
-      let value = this.createAnswer(this.filterArray(this.props.array))[
+      let value = this.createAnswer(this.filterArray([...this.props.array]))[
         this.state.itemHover
       ];
       if (value) {
-        this.itemClick(value);
+        this.itemClick(value, this.state.itemHover);
         this.setState({ suggestions: false, itemHover: false });
       }
     }
@@ -205,9 +203,8 @@ export default class Select extends Component {
 
     // LEFT Arrow / RIGHT Arrow
     if (e.keyCode === 37) {
-      console.log("détecté");
       // Left Arrow
-      if (this.state.valueSelected === false) {
+      if (!this.state.valueInput && this.state.valueSelected === false) {
         this.setState({ valueSelected: this.props.value.length - 1 });
       } else if (this.state.valueSelected > 0) {
         this.setState({ valueSelected: this.state.valueSelected - 1 });
@@ -215,7 +212,6 @@ export default class Select extends Component {
     }
 
     if (e.keyCode === 39) {
-      console.log("détecté");
       // Right Arrow
       if (this.state.valueSelected === this.props.value.length - 1) {
         this.setState({ valueSelected: false });
@@ -262,7 +258,7 @@ export default class Select extends Component {
     }
   };
 
-  itemClick = (element, index) => {
+  itemClick = async (element, index) => {
     if (index && index === this.props.array.length) {
       element = element.substr(8, element.length - 1 - 8);
     }
@@ -279,7 +275,7 @@ export default class Select extends Component {
     } else {
       this.props.itemClick(element);
     }
-    this.setState({ valueInput: "" });
+    await this.setState({ valueInput: "" });
   };
 
   createAnswer = array => {
@@ -324,6 +320,14 @@ export default class Select extends Component {
     this.setState({ valueHover: false });
   };
 
+  handleClickDocument = () => {
+    this.setState({ suggestions: false });
+  };
+
+  // onBlurInput = async () => {
+  //   await this.setState({ valueInput: "" });
+  // };
+
   render() {
     return (
       <div style={this.props.style.container}>
@@ -355,7 +359,7 @@ export default class Select extends Component {
               value={this.props.value}
               inputProps={{
                 readOnly: this.props.readOnly ? true : false,
-                id: `${this.props.idItem_input}`,
+                id: `${this.props.idItem}_input`,
                 myRef: ref => (this.input = ref),
                 value: this.props.readOnly ? "" : this.state.valueInput,
                 style: this.props.style.input,
@@ -430,7 +434,7 @@ export default class Select extends Component {
             style={this.props.style.suggestions}
             onClick={this.handleBodyClick}
             CLprops={{
-              onClick: () => this.setState({ suggestions: false }),
+              onClick: this.handleClickDocument,
               listenInside: this.props.listenInside
             }}
             itemProps={{
@@ -442,7 +446,7 @@ export default class Select extends Component {
               styleItemSelected: this.props.style.itemSelected,
               styleItemHover: this.props.style.itemHover,
               onMouseEnterItem: index => this.handleMouseEnterItem(index),
-              onMouseLeaveItem: () => this.handleMouseLeaveItem,
+              onMouseLeaveItem: this.handleMouseLeaveItem,
               onClick: (element, index) => this.itemClick(element, index)
             }}
           />

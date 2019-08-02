@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 export default class NativeClickListener extends React.Component {
   static propsType = {
     onClick: PropTypes.func,
-    listenInside: PropTypes.bool
+    listenInside: PropTypes.bool,
+    idItem: PropTypes.string
   };
 
   componentDidMount() {
@@ -16,7 +17,12 @@ export default class NativeClickListener extends React.Component {
 
   globalClickHandler = nativeEvent => {
     const { onClick, listenInside } = this.props;
-
+    if (
+      nativeEvent.target.id.includes(`${this.props.idItem}_input`) ||
+      nativeEvent.target.id.includes(`${this.props.idItem}multiDelete`)
+    ) {
+      return;
+    }
     if (
       this._container &&
       this._container.contains(nativeEvent.target) &&
@@ -24,6 +30,7 @@ export default class NativeClickListener extends React.Component {
     ) {
       return;
     }
+    console.log("LISTENED");
     onClick(nativeEvent);
   };
 

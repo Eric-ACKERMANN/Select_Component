@@ -15,6 +15,7 @@ export default function Suggestions({
       <ClickListener
         onClick={CLprops.onClick}
         listenInside={CLprops.listenInside}
+        idItem={idItem}
       >
         {suggestions.map((element, index) => {
           return (

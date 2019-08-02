@@ -19,7 +19,7 @@ export default function Item({
     if (selection && input.indexOf(value) !== -1) {
       return itemSelected(styleI, styleIS);
     } else if (hover && itemHover === index) {
-      return hoverF(styleI, styleIH);
+      return hoverI(styleI, styleIH);
     } else {
       return styleI;
     }
@@ -42,7 +42,7 @@ export default function Item({
   );
 }
 
-const hoverF = function(styleI, styleIH) {
+const hoverI = function(styleI, styleIH) {
   const keysIH = Object.keys(styleIH);
   keysIH.forEach(key => {
     styleI[key] = styleIH[key];
