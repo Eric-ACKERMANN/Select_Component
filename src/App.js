@@ -45,6 +45,7 @@ class App extends React.Component {
               idItem={"SelectRewritable"}
               logo={selectLogo}
               clear={true}
+              placeholder={"Select..."}
             />
           </div>
           <div>
@@ -61,6 +62,7 @@ class App extends React.Component {
               multiWrap={true}
               clearable={true}
               multiDelete={true}
+              placeholder={"Select..."}
             />
           </div>
         </div>

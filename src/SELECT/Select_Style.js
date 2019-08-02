@@ -24,7 +24,7 @@ export const selectStyle = {
     outline: "none",
     border: "none",
     width: 0,
-    backgroundColor: "white"
+    backgroundColor: "cyan"
   },
   value: {
     display: "flex",
@@ -34,29 +34,33 @@ export const selectStyle = {
     fontWeight: 500
   },
   multipleValue: {
-    padding: "15px",
+    padding: "5px",
     display: "flex",
     backgroundColor: "#DDD",
     justifyContent: "center",
     alignItems: "center"
   },
   multipleValueDelete: {
-    fontSize: "10px",
-    padding: "15px",
+    fontSize: 10,
+    padding: 5,
     display: "flex",
     backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center"
   },
-  valueDelete: {
-    backgroundColor: "red"
+  multipleValueDeleteHover: {
+    backgroundColor: "blue",
+    color: "cyan"
+  },
+  multipleValueDeleteSelected: {
+    backgroundColor: "yellow",
+    color: "orange"
   },
   placeholder: {
     color: "#808080",
     position: "absolute"
   },
-
-  menu: {
+  suggestions: {
     position: "absolute",
     display: "flex",
     flexDirection: "column",
@@ -94,7 +98,7 @@ export const selectStyle = {
     marginLeft: "auto",
     height: "100%"
   },
-  clear: {
+  clearLogo: {
     padding: "0px 0px 0px 5px",
     margin: "0px 5px 0px 0px",
     marginLeft: "auto",

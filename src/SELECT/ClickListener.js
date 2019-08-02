@@ -24,7 +24,6 @@ export default class NativeClickListener extends React.Component {
     ) {
       return;
     }
-
     onClick(nativeEvent);
   };
 

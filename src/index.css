@@ -41,3 +41,9 @@ code {
   font-size: 18px;
   margin-bottom: 10px;
 }
+
+.test2 {
+  background-color: red;
+  font-size: 15px;
+  width: 10ch;
+}

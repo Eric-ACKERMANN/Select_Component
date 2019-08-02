@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 
 import PropTypes from "prop-types";
-
-import ClickListener from "./ClickListener";
 import { clearLogo } from "./Select_Style";
+import Input from "./Select_input";
+import Placeholder from "./Select_placeholder";
+import ClearLogo from "./Select_ClearLogo";
+import Logo from "./Select_Logo";
+import Suggestions from "./Select_Suggestions";
+import ValueBlock from "./Select_ValueBlock";
 
 const setView = function(item, container, direction) {
   let itemBounding = item.getBoundingClientRect();
@@ -51,7 +55,7 @@ export default class Select extends Component {
         padding: "5px 5px 5px 5px"
       },
 
-      menu: {
+      suggestions: {
         position: "absolute",
         display: "flex",
         flexDirection: "column",
@@ -104,57 +108,18 @@ export default class Select extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dropdownVisible: false,
+      suggestions: false,
       itemHover: 0,
+      valueHover: false,
+      valueSelected: false,
       placeholder: "Select...",
       valueInput: "",
       mounted: false
     };
   }
 
-  hover = () => {
-    if (this.props.itemHover) {
-      let styleItem = { ...this.props.style.item };
-      let styleItemHover = { ...this.props.style.itemHover };
-
-      // On récupère la liste des keys de hover
-      const keysItemHover = Object.keys(styleItemHover);
-      keysItemHover.forEach(key => {
-        styleItem[key] = styleItemHover[key];
-      });
-      return styleItem;
-    }
-    return this.props.style.item;
-  };
-
-  itemSelected = () => {
-    if (this.props.itemSelected) {
-      let styleItem = { ...this.props.style.item };
-      let styleItemSelected = { ...this.props.style.itemSelected };
-
-      // On récupère la liste des keys de Selected
-      const keysItemSelected = Object.keys(styleItemSelected);
-      keysItemSelected.forEach(key => {
-        styleItem[key] = styleItemSelected[key];
-      });
-      return styleItem;
-    }
-    return this.props.style.item;
-  };
-
-  placeholder = style => {
-    if (this.props.placeholder) {
-      let styleValue = { ...style };
-      let stylePlaceholder = { ...this.props.style.placeholder };
-
-      // On récupère la liste des keys de Selected
-      const keysPlaceholder = Object.keys(stylePlaceholder);
-      keysPlaceholder.forEach(key => {
-        styleValue[key] = stylePlaceholder[key];
-      });
-      return styleValue;
-    }
-    return this.props.style.value;
+  onBlurInput = () => {
+    this.setState({ valueInput: "" });
   };
 
   onKeyDownInput = e => {
@@ -163,7 +128,14 @@ export default class Select extends Component {
       if (this.props.readOnly || this.state.valueInput === "") {
         if (this.props.multiSelect && this.props.value) {
           let value = [...this.props.value];
-          value.pop();
+          if (this.state.valueSelected !== false) {
+            value.splice(this.state.valueSelected, 1);
+            if (this.state.valueSelected > value.length - 1) {
+              this.setState({ valueSelected: false });
+            }
+          } else {
+            value.pop();
+          }
           if (value.length === 0) {
             this.props.itemClick("");
           } else {
@@ -188,10 +160,10 @@ export default class Select extends Component {
         direction = -1;
       }
 
-      // Si le menu est fermé
-      if (!this.state.dropdownVisible || this.state.itemHover === false) {
+      // Si le suggestion est fermé
+      if (!this.state.suggestions || this.state.itemHover === false) {
         newPosition = 0;
-        this.setState({ dropdownVisible: true, itemHover: newPosition });
+        this.setState({ suggestions: true, itemHover: newPosition });
         return;
       }
 
@@ -208,8 +180,10 @@ export default class Select extends Component {
         }_${newPosition}`
       );
 
-      let menu = document.getElementById(`${this.props.idItem}_menu`);
-      setView(item, menu, direction);
+      let suggestions = document.getElementById(
+        `${this.props.idItem}_suggestions`
+      );
+      setView(item, suggestions, direction);
 
       this.setState({ itemHover: newPosition });
     }
@@ -221,34 +195,53 @@ export default class Select extends Component {
       ];
       if (value) {
         this.itemClick(value);
-        this.setState({ dropdownVisible: false, itemHover: false });
+        this.setState({ suggestions: false, itemHover: false });
       }
     }
     //ESCAPE
     if (e.keyCode === 27) {
-      this.setState({ itemHover: false, dropdownVisible: false });
+      this.setState({ itemHover: false, suggestions: false });
+    }
+
+    // LEFT Arrow / RIGHT Arrow
+    if (e.keyCode === 37) {
+      console.log("détecté");
+      // Left Arrow
+      if (this.state.valueSelected === false) {
+        this.setState({ valueSelected: this.props.value.length - 1 });
+      } else if (this.state.valueSelected > 0) {
+        this.setState({ valueSelected: this.state.valueSelected - 1 });
+      }
+    }
+
+    if (e.keyCode === 39) {
+      console.log("détecté");
+      // Right Arrow
+      if (this.state.valueSelected === this.props.value.length - 1) {
+        this.setState({ valueSelected: false });
+      } else if (this.state.valueSelected !== false) {
+        this.setState({ valueSelected: this.state.valueSelected + 1 });
+      }
     }
   };
 
   handleClickInputBox = e => {
     this.input.focus();
-    console.log(e.target.id);
     if (
       e.target.id.includes(`${this.props.idItem}multiDeleteBox`) ||
       e.target.id.includes(`${this.props.idItem}multiDelete`)
     ) {
-      console.log("hey");
       return;
     } else {
       this.setState({
-        dropdownVisible: true,
+        suggestions: true,
         itemHover: 0
       });
     }
   };
 
   handleChangeInput = e => {
-    this.setState({ valueInput: e.target.value, dropdownVisible: true });
+    this.setState({ valueInput: e.target.value, suggestions: true });
   };
 
   filterArray = array => {
@@ -289,89 +282,19 @@ export default class Select extends Component {
     this.setState({ valueInput: "" });
   };
 
-  multipleStyle = () => {
-    if (this.props.multiSelect) {
-      let styleValue = { ...this.props.style.value };
-      let styleMultipleValue = { ...this.props.style.multipleValue };
-
-      // On récupère la liste des keys de Selected
-      const keysValueSelected = Object.keys(styleMultipleValue);
-      keysValueSelected.forEach(key => {
-        styleValue[key] = styleMultipleValue[key];
-      });
-      return styleValue;
-    }
-    return this.props.style.value;
-  };
-
-  multipleStyleDelete = () => {
-    if (this.props.multiSelect) {
-      let styleValue = { ...this.props.style.value };
-      let styleMultipleValueDelete = {
-        ...this.props.style.multipleValueDelete
-      };
-
-      // On récupère la liste des keys de Selected
-      const keysValueSelected = Object.keys(styleMultipleValueDelete);
-      keysValueSelected.forEach(key => {
-        styleValue[key] = styleMultipleValueDelete[key];
-      });
-      return styleValue;
-    }
-    return this.props.style.value;
-  };
-
-  componentDidMount = () => {
-    this.setState({ mounted: true });
-  };
-
-  inputStyle = () => {
-    let inputStyle = { ...this.props.style.input };
-    let element = document.getElementById(`${this.props.idItem}_sL`);
-    if (element) {
-      let elementBounding = element.getBoundingClientRect();
-      if (!this.props.readOnly) {
-        let inputWidth = elementBounding.width + 15;
-        inputStyle.width = inputWidth;
-      }
-    }
-
-    return inputStyle;
-  };
-
-  multiWrap = styleValue => {
-    let wrapStyleValue = { ...styleValue };
-    if (this.props.multiWrap) {
-      wrapStyleValue.flexWrap = "wrap";
-    }
-    return wrapStyleValue;
-  };
-
   createAnswer = array => {
-    let newArray = [...array];
-    if (!this.props.readOnly) {
-      let inputValue = this.state.valueInput.trim().toLowerCase();
+    const inputValue = this.state.valueInput.trim().toLowerCase();
+    array.forEach(function(e, index) {
+      return (array[index] = e.toLowerCase());
+    });
 
-      newArray.forEach(function(e, index) {
-        return (array[index] = e.toLowerCase());
-      });
+    const position = array.indexOf(inputValue);
 
-      let position = array.indexOf(inputValue);
-
-      if (position === -1 && this.state.valueInput) {
-        newArray.push(`Create "${this.state.valueInput}"`);
-      }
+    if (position === -1 && this.state.valueInput) {
+      array.push(`Create "${this.state.valueInput}"`);
     }
 
-    return newArray;
-  };
-
-  monoAnswer = style => {
-    let styleValue = { ...style };
-
-    styleValue.position = "absolute";
-
-    return styleValue;
+    return array;
   };
 
   multiValueDelete = element => {
@@ -381,193 +304,150 @@ export default class Select extends Component {
     this.props.itemClick(value);
   };
 
+  onClickClearLogo = () => {
+    this.props.itemClick("");
+  };
+
+  handleMouseEnterItem = index => {
+    this.setState({ itemHover: index });
+  };
+
+  handleMouseLeaveItem = () => {
+    this.setState({ itemHover: false });
+  };
+
+  handleMouseEnterValue = index => {
+    this.setState({ valueHover: index });
+  };
+
+  handleMouseLeaveValue = () => {
+    this.setState({ valueHover: false });
+  };
+
   render() {
     return (
-      <ClickListener
-        onClick={() => this.setState({ dropdownVisible: false })}
-        listenInside={this.props.listenInside}
-      >
-        <div style={this.props.style.container}>
+      <div style={this.props.style.container}>
+        <div
+          style={this.props.style.input_box}
+          onClick={e => this.handleClickInputBox(e)}
+        >
+          {/* DIV DU LOGO */}
+          {this.props.logo && this.props.logo.position === -1 && (
+            <Logo style={this.props.style.logo} value={this.props.logo.body} />
+          )}
+
           <div
             style={{
-              visibility: "hidden",
-              position: "absolute"
+              position: "relative",
+              display: "flex",
+              flexWrap: "wrap",
+              overflow: "scroll",
+              flex: 1
             }}
-            id={`${this.props.idItem}_sL`}
           >
-            {this.state.valueInput}
-          </div>
-          <div
-            style={this.props.style.input_box}
-            onClick={e => this.handleClickInputBox(e)}
-          >
-            {/* DIV DU LOGO */}
-            {this.props.logo && this.props.logo.position === -1 && (
-              <div style={this.props.style.logo}>{this.props.logo.body} </div>
+            {/* DIV COMPRENANT INPUT ,PLACEHOLDER ET VALUE*/}
+
+            {/*VALUE */}
+            <ValueBlock
+              style={{ ...this.props.style.value }}
+              valueInput={this.state.valueInput}
+              multiSelect={this.props.multiSelect}
+              value={this.props.value}
+              inputProps={{
+                readOnly: this.props.readOnly ? true : false,
+                id: `${this.props.idItem_input}`,
+                myRef: ref => (this.input = ref),
+                value: this.props.readOnly ? "" : this.state.valueInput,
+                style: this.props.style.input,
+                onChange: this.props.readOnly ? false : this.handleChangeInput,
+                onKeyDown: this.onKeyDownInput,
+                onBlur: this.props.readOnly ? undefined : this.onBlurInput
+              }}
+              multiValueProps={{
+                onMouseEnter: this.handleMouseEnterValue,
+                onMouseLeave: this.handleMouseLeaveValue,
+                idItem: this.props.idItem,
+                styleMultiValue: {
+                  multiValue: this.props.style.multipleValue,
+                  delete: this.props.style.multipleValueDelete,
+                  hover: this.props.style.multipleValueDeleteHover,
+                  selected: this.props.style.multipleValueDeleteSelected
+                },
+                multiDelete: this.multiValueDelete,
+                valueHover: this.state.valueHover,
+                valueSelected: this.state.valueSelected
+              }}
+            />
+
+            {!this.props.multiSelect && (
+              <Input
+                readOnly={this.props.readOnly ? true : false}
+                id={`${this.props.idItem}_input`}
+                myRef={ref => (this.input = ref)}
+                value={this.props.readOnly ? "" : this.state.valueInput}
+                style={this.props.style.input}
+                onChange={this.props.readOnly ? false : this.handleChangeInput}
+                onKeyDown={this.onKeyDownInput}
+                onBlur={this.props.readOnly ? undefined : this.onBlurInput}
+              />
             )}
 
-            <div
-              style={{
-                position: "relative",
-                display: "flex",
-                flexWrap: "wrap",
-                overflow: "scroll",
-                flex: 1
-              }}
-            >
-              {/* DIV COMPRENANT INPUT ,PLACEHOLDER ET VALUE*/}
-
-              {/*VALUE */}
-              <div
-                style={
-                  this.props.multiSelect
-                    ? this.multiWrap(this.props.style.value)
-                    : this.state.valueInput
-                    ? { display: "none" }
-                    : this.monoAnswer(this.props.style.value)
-                }
-              >
-                {this.props.multiSelect
-                  ? this.props.value &&
-                    this.props.value.map((e, index) => {
-                      return (
-                        <div
-                          key={index}
-                          style={{
-                            display: "flex",
-                            margin: "5px",
-                            borderRadius: "3px 3px 3px 3px",
-                            overflow: "hidden"
-                          }}
-                        >
-                          {/* VALUE - VALUE */}
-                          <div
-                            style={this.multipleStyle(this.props.style.value)}
-                          >
-                            {e}
-                          </div>
-
-                          {/* VALUE - Boutton delete */}
-                          {this.props.multiDelete && (
-                            <div
-                              id={`${this.props.idItem}multiDeleteBox${index}`}
-                              onClick={() => {
-                                this.multiValueDelete(e);
-                              }}
-                              style={this.multipleStyleDelete(
-                                this.props.style.value
-                              )}
-                            >
-                              <i
-                                id={`${this.props.idItem}multiDelete${index}`}
-                                className="fas fa-times"
-                              />
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })
-                  : this.props.value}
-              </div>
-              {/* INPUT */}
-
-              {this.props.readOnly ? (
-                <input
-                  readOnly
-                  ref={ref => (this.input = ref)}
-                  value={""}
-                  style={this.inputStyle()}
-                  onKeyDown={this.onKeyDownInput}
-                />
-              ) : (
-                <input
-                  style={this.inputStyle()}
-                  ref={ref => (this.input = ref)}
-                  value={this.state.valueInput}
-                  onChange={e => this.handleChangeInput(e)}
-                  onKeyDown={this.onKeyDownInput}
-                  // onBlur={() => {
-                  //   this.setState({ valueInput: "" });
-                  // }}
+            {/* PLACEHOLDER */}
+            {this.props.placeholder &&
+              !this.props.value &&
+              !this.state.valueInput && (
+                <Placeholder
+                  style={{
+                    value: this.props.style.value,
+                    placeholder: this.props.style.placeholder
+                  }}
+                  value={this.props.placeholder}
                 />
               )}
-
-              {/* PLACEHOLDER */}
-              {this.props.placeholder &&
-                !this.props.value &&
-                !this.state.valueInput && (
-                  <div style={this.placeholder(this.props.style.value)}>
-                    {this.state.placeholder}
-                  </div>
-                )}
-            </div>
-            {/* DIV DU CLEARABLE */}
-            {this.props.clearable && (
-              <div
-                onClick={() => {
-                  this.props.itemClick("");
-                }}
-                style={this.props.style.clear}
-              >
-                {clearLogo.body}
-              </div>
-            )}
-
-            {/* DIV DU LOGO */}
-            {this.props.logo && this.props.logo.position === 1 && (
-              <div style={this.props.style.logo}>{this.props.logo.body}</div>
-            )}
           </div>
 
-          {this.state.dropdownVisible && (
-            <div
-              id={`${this.props.idItem}_menu`}
-              style={this.props.style.menu}
-              onClick={this.handleBodyClick}
-            >
-              <ClickListener
-                onClick={() => this.setState({ dropdownVisible: false })}
-                listenInside={this.props.listenInside}
-              >
-                {this.createAnswer(this.filterArray(this.props.array)).map(
-                  (element, index) => {
-                    return (
-                      <div
-                        id={`${this.props.idItem}_${element}_${index}`}
-                        key={index}
-                        style={
-                          this.props.value === element
-                            ? this.itemSelected(this.props.style.item)
-                            : this.state.itemHover === index
-                            ? this.hover(this.props.style.item)
-                            : this.props.style.item
-                        }
-                        onClick={() => this.itemClick(element, index)}
-                        onMouseEnter={() => {
-                          this.setState({ itemHover: index });
-                        }}
-                        onMouseLeave={() => {
-                          this.setState({ itemHover: false });
-                        }}
-                      >
-                        {element}
-                      </div>
-                    );
-                  }
-                )}
-              </ClickListener>
-            </div>
+          {/* DIV DU CLEARABLE */}
+          {this.props.clearable && (
+            <ClearLogo
+              onClick={this.onClickClearLogo}
+              style={this.props.style.clearLogo}
+              value={clearLogo.body}
+            />
+          )}
+
+          {/* DIV DU LOGO */}
+          {this.props.logo && this.props.logo.position === 1 && (
+            <Logo style={this.props.style.logo} value={this.props.logo.body} />
           )}
         </div>
-      </ClickListener>
+
+        {this.state.suggestions && (
+          <Suggestions
+            suggestions={this.createAnswer(
+              this.filterArray([...this.props.array])
+            )}
+            idItem={this.props.idItem}
+            style={this.props.style.suggestions}
+            onClick={this.handleBodyClick}
+            CLprops={{
+              onClick: () => this.setState({ suggestions: false }),
+              listenInside: this.props.listenInside
+            }}
+            itemProps={{
+              itemHover: this.state.itemHover,
+              selection: this.props.itemSelected,
+              hover: this.props.itemHover,
+              input: this.props.value,
+              styleItem: this.props.style.item,
+              styleItemSelected: this.props.style.itemSelected,
+              styleItemHover: this.props.style.itemHover,
+              onMouseEnterItem: index => this.handleMouseEnterItem(index),
+              onMouseLeaveItem: () => this.handleMouseLeaveItem,
+              onClick: (element, index) => this.itemClick(element, index)
+            }}
+          />
+        )}
+      </div>
     );
   }
 }
-
-// style={
-//   this.props.multiSelect
-//     ? this.multiWrap(this.props.style.value)
-//     : this.state.valueInput
-//     ? { display: "none" }
-//     : this.props.style.value
-// }
