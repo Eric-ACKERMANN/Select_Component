@@ -8,7 +8,7 @@ export default function ValueMulti({ value, style, multiValueProps }) {
     styleMultiValue,
     multiDelete,
     valueHover,
-    valueSelected
+    valueFocus
   } = multiValueProps;
 
   return (
@@ -44,7 +44,7 @@ export default function ValueMulti({ value, style, multiValueProps }) {
                 { ...style },
                 { ...styleMultiValue },
                 valueHover,
-                valueSelected,
+                valueFocus,
                 index
               )}
             >
@@ -61,8 +61,8 @@ export default function ValueMulti({ value, style, multiValueProps }) {
 }
 
 const styleChange = function(style, styleChange) {
-  const keysValueSelected = Object.keys(styleChange);
-  keysValueSelected.forEach(key => {
+  const keysValueFocus = Object.keys(styleChange);
+  keysValueFocus.forEach(key => {
     style[key] = styleChange[key];
   });
   return style;
@@ -72,15 +72,15 @@ const styleDelete = function(
   style,
   styleMultiValue,
   valueHover,
-  valueSelected,
+  valueFocus,
   index
 ) {
   style = styleChange(style, styleMultiValue.delete);
-  if (valueSelected === index) {
-    style = styleChange(style, styleMultiValue.selected);
+  if (valueFocus === index) {
+    style = styleChange(style, styleMultiValue.deleteFocus);
   }
   if (valueHover === index) {
-    style = styleChange(style, styleMultiValue.hover);
+    style = styleChange(style, styleMultiValue.deleteHover);
   }
   return style;
 };

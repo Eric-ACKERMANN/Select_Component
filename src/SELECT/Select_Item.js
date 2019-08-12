@@ -11,15 +11,14 @@ export default function Item({
   styleItem,
   styleItemSelected,
   styleItemHover,
-  onMouseEnterItem,
-  onMouseLeaveItem,
+  onMouseMoveItem,
   onClick
 }) {
   const item = function(styleI, styleIS, styleIH) {
     if (selection && input.indexOf(value) !== -1) {
       return itemSelected(styleI, styleIS);
     } else if (hover && itemHover === index) {
-      return hoverI(styleI, styleIH);
+      return hoverItem(styleI, styleIH);
     } else {
       return styleI;
     }
@@ -34,15 +33,15 @@ export default function Item({
         { ...styleItemHover }
       )}
       onClick={() => onClick(value, index)}
-      onMouseEnter={() => onMouseEnterItem(index)}
-      onMouseLeave={onMouseLeaveItem}
+      onMouseMove={() => onMouseMoveItem(index)}
+      // onMouseLeave={onMouseLeaveItem}
     >
       {value}
     </div>
   );
 }
 
-const hoverI = function(styleI, styleIH) {
+const hoverItem = function(styleI, styleIH) {
   const keysIH = Object.keys(styleIH);
   keysIH.forEach(key => {
     styleI[key] = styleIH[key];

@@ -30,7 +30,6 @@ export default class NativeClickListener extends React.Component {
     ) {
       return;
     }
-    console.log("LISTENED");
     onClick(nativeEvent);
   };
 
@@ -40,3 +39,13 @@ export default class NativeClickListener extends React.Component {
     );
   }
 }
+
+NativeClickListener.propsType = {
+  onClick: PropTypes.func,
+  listenInside: PropTypes.bool,
+  idItem: PropTypes.string
+};
+
+NativeClickListener.defaultProps = {
+  listenInside: false
+};

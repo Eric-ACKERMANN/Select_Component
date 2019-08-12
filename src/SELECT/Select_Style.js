@@ -9,58 +9,62 @@ export const selectStyle = {
   input_box: {
     display: "flex",
     alignItems: "center",
-    outline: "none",
-    border: "1px solid black",
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: "5px 5px 5px 5px"
-    // height: 100,
-    // width: 100
+    border: "1px solid black", // INPUT BORDER COLOR
+    backgroundColor: "white", // INPUT BACKGROUND COLOR
+    borderRadius: 5, // INPUT BORDER RADIUS
+    padding: "5px 5px 5px 5px" // INPUT PADDING
+    // INPUT OUTLINE
   },
   input: {
     padding: 0,
-    fontSize: 14,
-    fontWeight: 500,
+    fontSize: 14, // INPUT FONT SIZE
+    fontWeight: 500, // INPUT FONT WEIGHT
     outline: "none",
     border: "none",
     width: 0,
-    backgroundColor: "cyan"
+    backgroundColor: "white" // INPUT BAKCGROUND COLOR
   },
+
   value: {
-    display: "flex",
-    padding: 0,
-    top: 0,
-    fontSize: 14,
-    fontWeight: 500
+    single: {
+      display: "flex",
+      padding: 0,
+      top: 0,
+      fontSize: 14, // VALUE FONT SIZE
+      fontWeight: 500 // VALUE FONT WEIGHT
+    },
+    multi: {
+      padding: "5px",
+      display: "flex",
+      backgroundColor: "#DDD",
+      justifyContent: "center",
+      alignItems: "center"
+    }
   },
-  multipleValue: {
-    padding: "5px",
-    display: "flex",
-    backgroundColor: "#DDD",
-    justifyContent: "center",
-    alignItems: "center"
+  valueDelete: {
+    normal: {
+      fontSize: 10,
+      padding: 5,
+      display: "flex",
+      backgroundColor: "red",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    hover: {
+      backgroundColor: "blue",
+      color: "cyan"
+    },
+    focus: {
+      backgroundColor: "yellow",
+      color: "orange"
+    }
   },
-  multipleValueDelete: {
-    fontSize: 10,
-    padding: 5,
-    display: "flex",
-    backgroundColor: "red",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  multipleValueDeleteHover: {
-    backgroundColor: "blue",
-    color: "cyan"
-  },
-  multipleValueDeleteSelected: {
-    backgroundColor: "yellow",
-    color: "orange"
-  },
+
   placeholder: {
     color: "#808080",
     position: "absolute"
   },
-  suggestions: {
+  options: {
     position: "absolute",
     display: "flex",
     flexDirection: "column",
@@ -71,24 +75,18 @@ export const selectStyle = {
     boxShadow:
       "0px 1px 3px 0px rgba(0, 0, 0, 0.2),0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12)",
     zIndex: 2,
-    height: 200,
+    maxHeight: 200,
     overflow: "scroll"
   },
   item: {
-    fontSize: 14,
-    color: "black",
-    padding: "5px 10px"
-  },
-  itemHover: {
-    fontSize: 16,
-    color: "black",
-    backgroundColor: "cyan"
-  },
-  itemSelected: {
-    fontSize: 18,
-    fontWeight: 600,
-    color: "black",
-    backgroundColor: "#DDD"
+    normal: { fontSize: 14, color: "black", padding: "5px 10px" },
+    hover: { fontSize: 16, color: "black", backgroundColor: "cyan" },
+    selected: {
+      fontSize: 18,
+      fontWeight: 600,
+      color: "black",
+      backgroundColor: "#DDD"
+    }
   },
 
   logo: {

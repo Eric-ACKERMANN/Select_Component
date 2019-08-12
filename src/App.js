@@ -1,33 +1,44 @@
 import React from "react";
 import Select from "./SELECT";
-import Input from "./INPUT";
-import { selectStyle, selectLogo } from "./SELECT/Select_Style";
-import { inputStyle, inputLogo } from "./INPUT/Input_Style";
+import { selectStyle } from "./SELECT/Select_Style";
 
 class App extends React.Component {
   state = {
     selectValue: "",
-    selectValue2: "",
-    inputValue: ""
+    selectValue2: ""
   };
 
   // 1er SELECT avec ReadOnly
   setSelectValue = element => this.setState({ selectValue: element });
-  handleChangeSelect1 = event => this.setState({ selectValue: event });
 
   // 2ème SELECT avec possibilité d'écrire
   setSelectValue2 = element => this.setState({ selectValue2: element });
-  handleChangeSelect = event => this.setState({ selectValue2: event });
-
-  // INPUT
-  setInputValue = element => this.setState({ inputValue: element });
-  handleChangeInput = event => this.setState({ inputValue: event });
 
   render() {
-    let array = [];
-    for (let i = 0; i < 40; i++) {
-      array.push(`element ${i}`);
-    }
+    let array = [
+      "Blue",
+      "Yellow",
+      "Green",
+      "Orange",
+      "Grey",
+      "Black",
+      "White",
+      "Cyan",
+      "Purple",
+      "Magenta",
+      "Amaranth",
+      "Amber",
+      "Amethyst",
+      "Apricot",
+      "Aquamarine",
+      "Chocolate",
+      "Coffee",
+      "Crimson",
+      "Spring bud",
+      "Salmon",
+      "Srping green",
+      "Salmon"
+    ];
 
     return (
       <div className="container">
@@ -35,49 +46,52 @@ class App extends React.Component {
           <div>
             <span>SELECT READ ONLY</span>
             <Select
-              array={array}
+              searchable={true}
+              options={array}
               value={this.state.selectValue}
-              onChange={this.handleChangeSelect1}
-              itemClick={this.setSelectValue}
+              setValue={this.setSelectValue}
               style={selectStyle}
               listenInside={true}
-              // readOnly={true}
               idItem={"SelectRewritable"}
-              logo={selectLogo}
+              logo={{
+                logo: false,
+                position: 1,
+                body: <i className="fas fa-search" />
+              }}
               clear={true}
-              placeholder={"Select..."}
+              placeholder={"Selectionner une valeur"}
             />
           </div>
           <div>
             <span>SELECT</span>
             <Select
-              array={array}
+              onChange={this.handleChangeSelect1}
+              setValue={this.setSelectValue2}
+              id={"Select2"}
+              searchable={true}
               value={this.state.selectValue2}
-              onChange={this.handleChangeSelect}
-              itemClick={this.setSelectValue2}
+              options={array}
               style={selectStyle}
-              idItem={"SelectReadOnly"}
-              logo={selectLogo}
-              multiSelect={true}
-              multiWrap={true}
-              clearable={true}
-              multiDelete={true}
-              placeholder={"Select..."}
-            />
-          </div>
-        </div>
-        <div className="test">
-          <div>
-            <span>INPUT</span>
-            <Input
-              array={array}
-              value={this.state.inputValue}
-              onChange={this.handleChangeInput}
-              itemClick={this.setInputValue}
-              style={inputStyle}
-              itemSelected={false}
-              idItem={"Input"}
-              logo={inputLogo}
+              placeholder="Selectionnez"
+              optionsTools={{
+                disappearOnClick: true, // <=> listenInside
+                hoverEffect: true,
+                selectedEffect: true,
+                selectedFilter: true,
+                createOptions: true
+              }}
+              valueTools={{
+                multi: true,
+                wrap: false,
+                itemDeletable: true,
+                itemDeletableHover: true,
+                clearable: true
+              }}
+              logo={{
+                logo: false,
+                position: 1,
+                body: <i className="fas fa-search" />
+              }}
             />
           </div>
         </div>

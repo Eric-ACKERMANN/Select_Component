@@ -47,3 +47,7 @@ const inputStyle = function(style, id) {
   }
   return inputStyle;
 };
+
+Input.propTypes = {};
+
+Input.defaultProps = {};

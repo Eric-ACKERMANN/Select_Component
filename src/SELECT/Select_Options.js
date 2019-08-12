@@ -2,22 +2,22 @@ import React from "react";
 import Item from "./Select_Item";
 import ClickListener from "./ClickListener";
 
-export default function Suggestions({
+export default function Options({
   idItem,
-  suggestions,
+  options,
   style,
   onClick,
   CLprops,
   itemProps
 }) {
   return (
-    <div id={`${idItem}_suggestions`} style={style} onClick={onClick}>
+    <div id={`${idItem}_options`} style={style} onClick={onClick}>
       <ClickListener
         onClick={CLprops.onClick}
         listenInside={CLprops.listenInside}
         idItem={idItem}
       >
-        {suggestions.map((element, index) => {
+        {options.map((element, index) => {
           return (
             <Item
               value={element}
@@ -31,8 +31,7 @@ export default function Suggestions({
               styleItem={itemProps.styleItem}
               styleItemSelected={itemProps.styleItemSelected}
               styleItemHover={itemProps.styleItemHover}
-              onMouseEnterItem={itemProps.onMouseEnterItem}
-              onMouseLeaveItem={itemProps.onMouseLeaveItem}
+              onMouseMoveItem={itemProps.onMouseMoveItem}
               onClick={itemProps.onClick}
             />
           );
