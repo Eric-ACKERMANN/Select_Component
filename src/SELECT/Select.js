@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { clearLogo } from "./Select_Style";
 import Input from "./Select_input";
 import Placeholder from "./Select_Placeholder";
 import ClearLogo from "./Select_ClearLogo";
 import Logo from "./Select_Logo";
 import Options from "./Select_Options";
-import ValueBlock from "./Select_ValueBlock";
+import Value from "./Select_Value";
 
 const setView = function(item, container, direction) {
   let itemBounding = item.getBoundingClientRect();
@@ -105,15 +104,13 @@ export default class Select extends Component {
       newPosition = setPosition(
         position,
         direction,
-        this.createAnswer(this.filterArray([...this.props.options]))
+        this.modifyArray([...this.props.options])
       );
 
       // Set the view to auto-scroll if element is out of viewport.
       let item = document.getElementById(
         `${this.props.id}_${
-          this.createAnswer(this.filterArray([...this.props.options]))[
-            newPosition
-          ]
+          this.modifyArray([...this.props.options])[newPosition]
         }_${newPosition}`
       );
 
@@ -125,7 +122,7 @@ export default class Select extends Component {
 
     // ENTER
     if (e.keyCode === 13) {
-      let value = this.createAnswer(this.filterArray([...this.props.options]))[
+      let value = this.modifyArray([...this.props.options])[
         this.state.itemHover
       ];
       if (value) {
@@ -227,7 +224,9 @@ export default class Select extends Component {
         this.props.setValue(value);
       } else {
         let value = [...this.props.value];
-        value.push(element);
+        if (value.indexOf(element) === -1) {
+          value.push(element);
+        }
         this.props.setValue(value);
       }
       this.input.focus();
@@ -280,45 +279,151 @@ export default class Select extends Component {
     this.setState({ options: false });
   };
 
-  // onBlurInput = async () => {
-  //   await this.setState({ valueInput: "" });
-  // };
+  modifyArray = options => {
+    let array = [...options];
+    if (this.props.optionsTools.selectedFilter) {
+      array = this.filterArray(array);
+    }
+    if (this.props.optionsTools.createAnswer) {
+      array = this.createAnswer(array);
+    }
+    return array;
+  };
 
   render() {
+    const containerStyle = {
+      position: "relative",
+      backgroundColor: "none",
+      ...this.props.style.container
+    };
+
+    const inputBoxStyle = {
+      display: "flex",
+      alignItems: "center",
+      ...this.props.style.inputBox
+    };
+
+    const valueBlockStyle = {
+      position: "relative",
+      display: "flex",
+      overflow: "scroll",
+      flex: 1
+    };
+
+    const inputStyle = {
+      padding: 0,
+      outline: "none",
+      border: "none",
+      width: 0,
+      ...this.props.style.input
+    };
+
+    const valueSingleStyle = {
+      display: "flex",
+      padding: 0,
+      top: 0,
+      ...this.props.style.value.single
+    };
+
+    const valueMultiStyle = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      ...this.props.style.value.multi
+    };
+
+    const valueDeleteNormalStyle = {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      ...this.props.style.valueDelete.normal
+    };
+
+    const valueDeleteHoverStyle = {
+      backgroundColor: "blue", // VALUE DELETE HOVER BACKGROUND COLOR
+      color: "cyan", // VALUE DELETE HOVER COLOR
+      ...this.props.style.valueDelete.hover
+    };
+
+    const valueDeleteFocusStyle = {
+      backgroundColor: "yellow", // VALUE DELETE FOCUS BACKGROUND COLOR
+      color: "orange", // VALUE DELETE FOCUS COLOR
+      ...this.props.style.valueDelete.focus
+    };
+
+    const placeholderStyle = {
+      position: "absolute",
+      ...this.props.style.placeholder
+    };
+
+    const optionsStyle = {
+      position: "absolute",
+      display: "flex",
+      flexDirection: "column",
+      top: "100%",
+      width: "100%",
+      padding: 0,
+      zIndex: 2,
+      overflow: "scroll",
+      ...this.props.style.options
+    };
+
+    const itemNormalStyle = {
+      fontSize: 14, // ITEMS FONT SIZE
+      color: "black", // ITEMS COLOR
+      padding: "5px 10px", // ITEMS PADDING
+      ...this.props.style.item.normal
+    };
+
+    const itemHoverStyle = {
+      fontSize: 14, // ITEMS HOVER FONTSIZE
+      color: "black", // ITEMS HOVER COLOR
+      backgroundColor: "cyan", // ITEMS HOVER BAKCHORUNDCOLOR
+      ...this.props.style.item.hover
+    };
+
+    const itemSelectedStyle = {
+      fontSize: 14, // ITEMS SELECTED FONT SIZE
+      fontWeight: 600, // ITEMS SELECTED FONT WEIGHT
+      color: "black", // ITEMS SELECTED COLOR
+      backgroundColor: "#DDD", // ITEMS SLEECTE BCKGROUNDCOLOR
+      ...this.props.style.item.selected
+    };
+
+    const logoStyle = {
+      padding: "0px 0px 0px 5px", // LOGO PADDING
+      margin: "0px 0px 0px 0px", // LOGO MARGIN
+      borderLeft: "solid 1px black", // LOGO BORDER
+      ...this.props.style.logo
+    };
+
+    const clearLogoStyle = {
+      marginLeft: "auto",
+      height: "100%",
+      ...this.props.style.clearLogo
+    };
+
     return (
-      <div style={this.props.style.container}>
-        <div
-          style={this.props.style.input_box}
-          onClick={e => this.handleClickInputBox(e)}
-        >
+      <div style={containerStyle}>
+        <div style={inputBoxStyle} onClick={e => this.handleClickInputBox(e)}>
           {/* DIV DU LOGO */}
           {this.props.logo && this.props.logo.position === -1 && (
             <Logo style={this.props.style.logo} value={this.props.logo.body} />
           )}
-
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              flexWrap: "wrap",
-              overflow: "scroll",
-              flex: 1
-            }}
-          >
-            {/* DIV COMPRENANT INPUT ,PLACEHOLDER ET VALUE*/}
-
-            {/*VALUE */}
-            <ValueBlock
-              style={{ ...this.props.style.value.single }}
+          {/* DIV COMPRENANT INPUT ,PLACEHOLDER ET VALUE*/}
+          <div style={valueBlockStyle}>
+            <Value
+              style={valueSingleStyle}
               valueInput={this.state.valueInput}
               multiSelect={this.props.valueTools.multi}
+              wrap={this.props.valueTools.wrap}
               value={this.props.value}
               inputProps={{
                 readOnly: this.props.searchable ? false : true,
                 id: `${this.props.id}_input`,
                 myRef: ref => (this.input = ref),
                 value: this.props.searchable ? this.state.valueInput : "",
-                style: this.props.style.input,
+                style: inputStyle,
                 onChange: this.props.searchable
                   ? this.handleChangeInput
                   : false,
@@ -330,13 +435,17 @@ export default class Select extends Component {
                 onMouseLeave: this.handleMouseLeaveValue,
                 idItem: this.props.id,
                 styleMultiValue: {
-                  multiValue: this.props.style.value.multi,
-                  delete: this.props.style.valueDelete.normal,
-                  deleteHover: this.props.style.valueDelete.hover,
-                  deleteFocus: this.props.style.valueDelete.focus
+                  multiValue: valueMultiStyle,
+                  delete: valueDeleteNormalStyle,
+                  deleteHover: valueDeleteHoverStyle,
+                  deleteFocus: valueDeleteFocusStyle
                 },
-                multiDelete: this.multiValueDelete,
-                valueHover: this.state.valueHover,
+                multiDelete: this.props.valueTools.valueDeletable
+                  ? this.multiValueDelete
+                  : null,
+                valueHover: this.props.valueTools.valueDeletableHover
+                  ? this.state.valueHover
+                  : null,
                 valueFocus: this.state.valueFocus
               }}
             />
@@ -357,39 +466,38 @@ export default class Select extends Component {
             )}
 
             {/* PLACEHOLDER */}
-            {!this.props.value && !this.state.valueInput && (
-              <Placeholder
-                style={{
-                  value: this.props.style.value.single,
-                  placeholder: this.props.style.placeholder
-                }}
-                value={this.props.placeholder}
-              />
-            )}
+            {(!this.props.value || this.props.value === []) &&
+              !this.state.valueInput && (
+                <Placeholder
+                  style={{
+                    value: valueSingleStyle,
+                    placeholder: placeholderStyle
+                  }}
+                  value={this.props.placeholder}
+                />
+              )}
           </div>
 
           {/* DIV DU CLEARABLE */}
           {this.props.valueTools.clearable && (
             <ClearLogo
               onClick={this.onClickClearLogo}
-              style={this.props.style.clearLogo}
-              value={clearLogo.body}
+              style={clearLogoStyle}
+              value={this.props.valueTools.clearable}
             />
           )}
 
           {/* DIV DU LOGO */}
-          {this.props.logo && this.props.logo.position === 1 && (
-            <Logo style={this.props.style.logo} value={this.props.logo.body} />
+          {this.props.logo.body && this.props.logo.position === 1 && (
+            <Logo style={logoStyle} value={this.props.logo.body} />
           )}
         </div>
 
         {this.state.options && (
           <Options
-            options={this.createAnswer(
-              this.filterArray([...this.props.options])
-            )}
+            options={this.modifyArray([...this.props.options])}
             idItem={this.props.id}
-            style={this.props.style.options}
+            style={optionsStyle}
             onClick={this.handleBodyClick}
             CLprops={{
               onClick: this.handleClickDocument,
@@ -397,12 +505,13 @@ export default class Select extends Component {
             }}
             itemProps={{
               itemHover: this.state.itemHover,
-              selection: this.props.optionsTools.selectedEffect,
+              itemSelected: this.props.optionsTools.selectedEffect,
               hover: this.props.optionsTools.hoverEffect,
               input: this.props.value,
-              styleItem: this.props.style.item.normal,
-              styleItemSelected: this.props.style.item.selected,
-              styleItemHover: this.props.style.item.hover,
+              styleItem: itemNormalStyle,
+              styleItemSelected: itemSelectedStyle,
+
+              styleItemHover: itemHoverStyle,
               onMouseMoveItem: index => this.handleMouseMoveItem(index),
               onClick: (element, index) => this.setValue(element, index)
             }}
@@ -413,84 +522,57 @@ export default class Select extends Component {
   }
 }
 
+Select.propsTypes = {
+  searchable: PropTypes.bool,
+  options: PropTypes.array,
+  value: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  setValue: PropTypes.func.isRequired,
+  placeholder: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+  optionsTools: PropTypes.shape({
+    disappearOnClick: PropTypes.bool,
+    hoverEffect: PropTypes.bool,
+    selectedEffect: PropTypes.bool,
+    selectedFilter: PropTypes.bool,
+    createOptions: PropTypes.bool
+  }),
+  valueTools: PropTypes.shape({
+    multi: PropTypes.bool,
+    wrap: PropTypes.bool,
+    valueDeletable: PropTypes.bool,
+    valueDeletableHover: PropTypes.bool
+  }),
+
+  logo: PropTypes.shape({
+    logo: PropTypes.bool,
+    position: PropTypes.oneOf([-1, 1])
+  }),
+  style: PropTypes.objectOf(PropTypes.object)
+};
+
 Select.defaultProps = {
   searchable: false,
-  value: "",
   options: [],
-  style: {
-    container: {
-      position: "relative",
-      backgroundColor: "none"
-    },
-    input: {
-      outline: "true",
-      backgroundColor: "white",
-      borderRadius: 5,
-      padding: "5px 5px 5px 5px"
-    },
-    options: {
-      position: "absolute",
-      display: "flex",
-      flexDirection: "column",
-      top: "100%",
-      width: "100%",
-      padding: 0,
-      backgroundColor: "white",
-      boxShadow: "1px 1px 1px 1px #888888",
-      zIndex: 2,
-      height: 200,
-      overflow: "scroll"
-    },
-    item: {
-      padding: "5px 10px"
-    },
-    multipleItem: {
-      padding: "5px",
-      backgroundColor: "grey"
-    }
-  },
-  placeholder: "Select",
+  value: "",
+  id: "",
+  placeholder: "",
   optionsTools: {
     disappearOnClick: true, // <=> listenInside
     hoverEffect: true,
-    SelectedEffect: true,
-    SelectedFilter: true,
-    CreateOptions: true
+    selectedEffect: false,
+    selectedFilter: true,
+    createOptions: true
   },
   valueTools: {
     multi: false,
     wrap: false,
-    itemDeletable: true,
-    itemDeletableHover: true
+    valueDeletable: true,
+    valueDeletableHover: true,
+    clearable: false
   },
   logo: {
-    logo: false,
-    position: 1
-  }
-};
-
-Select.propsTypes = {
-  searchable: PropTypes.bool,
-  value: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
-  options: PropTypes.array,
-  style: PropTypes.object,
-  placeholder: PropTypes.string,
-  optionsTool: PropTypes.shape({
-    disappearOnClick: PropTypes.bool,
-    hoverEffect: PropTypes.bool,
-    SelectedEffect: PropTypes.bool,
-    SelectedFilter: PropTypes.bool,
-    CreateOptions: PropTypes.bool
-  }),
-  valueTool: PropTypes.shape({
-    multi: PropTypes.bool,
-    wrap: PropTypes.bool,
-    itemDeletable: PropTypes.bool,
-    itemDeletableHover: PropTypes.bool
-  }),
-  logo: PropTypes.shape({
-    logo: PropTypes.bool,
-    position: PropTypes.oneOf([-1, 1])
-  })
+    body: false,
+    position: 0
+  },
+  style: {}
 };

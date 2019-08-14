@@ -2,10 +2,11 @@ import React from "react";
 import Input from "./Select_input";
 import ValueMulti from "./Select_ValueMulti";
 
-export default function ValueBlock({
+export default function Value({
   style,
   valueInput,
   multiSelect,
+  wrap,
   value,
   inputProps,
   multiValueProps
@@ -14,7 +15,7 @@ export default function ValueBlock({
     <div
       style={
         multiSelect || (!valueInput && !multiSelect)
-          ? valueStyle(style, multiSelect, multiWrap)
+          ? valueStyle(style, multiSelect, wrap)
           : { display: "none" }
       }
     >
@@ -48,15 +49,15 @@ const multiWrap = function(style) {
   style.flexWrap = "wrap";
   return style;
 };
-const multiSelectStyle = function(style, multiWrap) {
-  if (multiWrap) {
+const multiSelectStyle = function(style, wrap) {
+  if (wrap) {
     style = multiWrap(style);
   }
   return style;
 };
-const valueStyle = function(style, multiSelect, multiWrap) {
+const valueStyle = function(style, multiSelect, wrap) {
   if (multiSelect) {
-    style = multiSelectStyle(style, multiWrap);
+    style = multiSelectStyle(style, wrap);
   } else {
     style.position = "absolute";
   }

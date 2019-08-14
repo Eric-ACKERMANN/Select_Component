@@ -1,14 +1,8 @@
-import React from "react";
-
 export const selectStyle = {
   container: {
-    position: "relative",
-    backgroundColor: "none",
-    width: "315px"
+    width: "250px" // INPUT WIDTH
   },
-  input_box: {
-    display: "flex",
-    alignItems: "center",
+  inputBox: {
     border: "1px solid black", // INPUT BORDER COLOR
     backgroundColor: "white", // INPUT BACKGROUND COLOR
     borderRadius: 5, // INPUT BORDER RADIUS
@@ -16,101 +10,71 @@ export const selectStyle = {
     // INPUT OUTLINE
   },
   input: {
-    padding: 0,
     fontSize: 14, // INPUT FONT SIZE
     fontWeight: 500, // INPUT FONT WEIGHT
-    outline: "none",
-    border: "none",
-    width: 0,
     backgroundColor: "white" // INPUT BAKCGROUND COLOR
   },
-
   value: {
     single: {
-      display: "flex",
-      padding: 0,
-      top: 0,
       fontSize: 14, // VALUE FONT SIZE
       fontWeight: 500 // VALUE FONT WEIGHT
     },
     multi: {
-      padding: "5px",
-      display: "flex",
-      backgroundColor: "#DDD",
-      justifyContent: "center",
-      alignItems: "center"
+      padding: "0px 5px 0px 5px ", // VALUE MULTI PADDING
+      backgroundColor: "#DDD" // VALUE MULTI BACKGROUND COLOR
     }
   },
   valueDelete: {
     normal: {
-      fontSize: 10,
-      padding: 5,
-      display: "flex",
-      backgroundColor: "red",
-      justifyContent: "center",
-      alignItems: "center"
+      fontSize: 10, // VALUE DELETE SIZE
+      padding: 5, // VALUE DELETE PADDING
+
+      backgroundColor: "red" // VALUE DELETE BAKCGROUND COLOR
     },
     hover: {
-      backgroundColor: "blue",
-      color: "cyan"
+      backgroundColor: "blue", // VALUE DELETE HOVER BACKGROUND COLOR
+      color: "cyan" // VALUE DELETE HOVER COLOR
     },
     focus: {
-      backgroundColor: "yellow",
-      color: "orange"
+      backgroundColor: "yellow", // VALUE DELETE FOCUS BACKGROUND COLOR
+      color: "orange" // VALUE DELETE FOCUS COLOR
     }
   },
 
   placeholder: {
-    color: "#808080",
-    position: "absolute"
+    color: "#808080" // PLACEHOLDER COLOR
   },
   options: {
-    position: "absolute",
-    display: "flex",
-    flexDirection: "column",
-    top: "100%",
-    width: "100%",
-    padding: 0,
-    backgroundColor: "white",
+    backgroundColor: "white", // OPTIONS BACKGROUND COLOR
     boxShadow:
-      "0px 1px 3px 0px rgba(0, 0, 0, 0.2),0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12)",
-    zIndex: 2,
-    maxHeight: 200,
-    overflow: "scroll"
+      "0px 1px 3px 0px rgba(0, 0, 0, 0.2),0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12)", // OPTIONS BOX-SHADOW
+    maxHeight: 200 // OPTIONS MAX HEIGHT
   },
   item: {
-    normal: { fontSize: 14, color: "black", padding: "5px 10px" },
-    hover: { fontSize: 16, color: "black", backgroundColor: "cyan" },
+    normal: {
+      fontSize: 14, // ITEMS FONT SIZE
+      color: "black", // ITEMS COLOR
+      padding: "5px 10px" // ITEMS PADDING
+    },
+    hover: {
+      fontSize: 14, // ITEMS HOVER FONTSIZE
+      color: "black", // ITEMS HOVER COLOR
+      backgroundColor: "cyan" // ITEMS HOVER BAKCHORUNDCOLOR
+    },
     selected: {
-      fontSize: 18,
-      fontWeight: 600,
-      color: "black",
-      backgroundColor: "#DDD"
+      fontSize: 14, // ITEMS SELECTED FONT SIZE
+      fontWeight: 600, // ITEMS SELECTED FONT WEIGHT
+      color: "black", // ITEMS SELECTED COLOR
+      backgroundColor: "#DDD" // ITEMS SLEECTE BCKGROUNDCOLOR
     }
   },
-
   logo: {
-    padding: "0px 0px 0px 5px",
-    margin: "0px 0px 0px 0px",
-    borderLeft: "solid 1px black",
-    marginLeft: "auto",
-    height: "100%"
+    padding: "0px 0px 0px 5px", // LOGO PADDING
+    margin: "0px 0px 0px 0px", // LOGO MARGIN
+    borderLeft: "solid 1px black" // LOGO BORDER
   },
   clearLogo: {
-    padding: "0px 0px 0px 5px",
-    margin: "0px 5px 0px 0px",
-    marginLeft: "auto",
-    height: "100%"
+    padding: "0px 0px 0px 5px", // CLEAR PADDING
+    margin: "0px 5px 0px 0px" // CLEAR MARGIN
   }
-};
-
-export const selectLogo = {
-  name: "searchLogo",
-  body: <i className="fas fa-search" />,
-  position: 1
-};
-
-export const clearLogo = {
-  name: "clearLogo",
-  body: <i className="fas fa-times" />
 };

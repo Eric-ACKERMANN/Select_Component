@@ -36,8 +36,7 @@ class App extends React.Component {
       "Crimson",
       "Spring bud",
       "Salmon",
-      "Srping green",
-      "Salmon"
+      "Srping green"
     ];
 
     return (
@@ -49,49 +48,60 @@ class App extends React.Component {
               searchable={true}
               options={array}
               value={this.state.selectValue}
+              id="Select2"
               setValue={this.setSelectValue}
-              style={selectStyle}
-              listenInside={true}
-              idItem={"SelectRewritable"}
+              placeholder="Selectionnez une valeur...."
+              optionsTools={{
+                disappearOnClick: true,
+                hoverEffect: true,
+                selectedEffect: false,
+                selectedFilter: true,
+                createOptions: true
+              }}
+              valueTools={{
+                multi: true,
+                wrap: true,
+                valueDeletable: true,
+                valueDeletableHover: true,
+                clearable: <i className="fas fa-times" />
+              }}
               logo={{
                 logo: false,
                 position: 1,
                 body: <i className="fas fa-search" />
               }}
-              clear={true}
-              placeholder={"Selectionner une valeur"}
+              style={selectStyle}
             />
           </div>
           <div>
             <span>SELECT</span>
             <Select
-              onChange={this.handleChangeSelect1}
-              setValue={this.setSelectValue2}
-              id={"Select2"}
               searchable={true}
-              value={this.state.selectValue2}
               options={array}
-              style={selectStyle}
-              placeholder="Selectionnez"
+              value={this.state.selectValue2}
+              id="Select2"
+              setValue={this.setSelectValue2}
+              placeholder="Selectionnez une valeur...."
               optionsTools={{
-                disappearOnClick: true, // <=> listenInside
+                disappearOnClick: true,
                 hoverEffect: true,
-                selectedEffect: true,
+                selectedEffect: false,
                 selectedFilter: true,
                 createOptions: true
               }}
               valueTools={{
                 multi: true,
                 wrap: false,
-                itemDeletable: true,
-                itemDeletableHover: true,
-                clearable: true
+                valueDeletable: true,
+                valueDeletableHover: true,
+                clearable: <i className="fas fa-times" />
               }}
               logo={{
                 logo: false,
                 position: 1,
                 body: <i className="fas fa-search" />
               }}
+              style={selectStyle}
             />
           </div>
         </div>
