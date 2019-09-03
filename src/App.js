@@ -43,6 +43,17 @@ class App extends React.Component {
       <div className="container">
         <div className="test">
           <div>
+            <span>SELECT ERNESTE</span>
+            <Select
+              searchable={true}
+              value={this.state.selectValue}
+              id="Select2"
+              setValue={this.setSelectValue}
+              placeholder="Selectionnez une valeur...."
+              style={selectStyle}
+            />
+          </div>
+          <div>
             <span>SELECT READ ONLY</span>
             <Select
               searchable={true}
@@ -55,11 +66,11 @@ class App extends React.Component {
                 disappearOnClick: true,
                 hoverEffect: true,
                 selectedEffect: false,
-                selectedFilter: true,
+                selectedFilter: false,
                 createOptions: true
               }}
               valueTools={{
-                multi: true,
+                multi: false,
                 wrap: true,
                 valueDeletable: true,
                 valueDeletableHover: true,

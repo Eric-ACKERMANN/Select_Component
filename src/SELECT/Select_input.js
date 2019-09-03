@@ -41,9 +41,9 @@ const inputStyle = function(style, id) {
   let inputStyle = { ...style };
   if (numberChar !== null) {
     let inputWidth = `${numberChar.value.length + 1}ch`;
-    style.width = inputWidth;
+    inputStyle.width = inputWidth;
   } else {
-    style.width = "5px";
+    inputStyle.width = "5px";
   }
   return inputStyle;
 };

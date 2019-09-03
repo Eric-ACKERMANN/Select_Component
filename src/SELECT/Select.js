@@ -427,7 +427,7 @@ export default class Select extends Component {
                 onChange: this.props.searchable
                   ? this.handleChangeInput
                   : false,
-                onKeyDown: this.onKeyDownInput,
+                onKeyDown: this.props.options ? this.onKeyDownInput : null,
                 onBlur: this.props.searchable ? this.onBlurInput : undefined
               }}
               multiValueProps={{
@@ -460,7 +460,9 @@ export default class Select extends Component {
                 onChange={
                   this.props.searchable ? this.handleChangeInput : false
                 }
-                onKeyDown={this.onKeyDownInput}
+                onKeyDown={
+                  this.props.options.length > 0 ? this.onKeyDownInput : null
+                }
                 onBlur={this.props.searchable ? this.onBlurInput : undefined}
               />
             )}
